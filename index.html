@@ -230,5 +230,41 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        // 备用加载和调试
+        window.addEventListener('load', function() {
+            console.log('页面完全加载完成');
+            
+            // 检查关键元素
+            const searchBtn = document.getElementById('searchBtn');
+            const appJsLoaded = typeof generateLinks === 'function';
+            
+            console.log('搜索按钮存在:', !!searchBtn);
+            console.log('app.js已加载:', appJsLoaded);
+            
+            // 如果app.js没加载，显示错误
+            if (!appJsLoaded) {
+                console.error('app.js未正确加载！');
+                const toast = document.getElementById('errorToast');
+                if (toast) {
+                    toast.textContent = 'JavaScript文件加载失败，请检查app.js文件';
+                    toast.style.display = 'block';
+                }
+            }
+            
+            // 备用事件绑定（如果主绑定失败）
+            if (searchBtn && !searchBtn.onclick) {
+                console.log('使用备用事件绑定');
+                searchBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (typeof generateLinks === 'function') {
+                        generateLinks();
+                    } else {
+                        alert('JavaScript未加载，请刷新页面重试');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
