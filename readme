@@ -1,0 +1,78 @@
+# 后端API服务器快速启动
+
+## 快速开始
+
+### 1. 安装依赖
+
+```bash
+npm install
+```
+
+### 2. 启动服务器
+
+```bash
+npm start
+```
+
+服务器将在 `http://localhost:3000` 启动
+
+### 3. 测试API
+
+打开浏览器访问：
+- 健康检查：http://localhost:3000/api/health
+- GMGN API：http://localhost:3000/api/gmgn?address=0x23894dc9da6c94ecb439911caf7d337746575a72&chain=ETH
+
+### 4. 更新前端配置
+
+在 `index.html` 中，确保 `API_BASE_URL` 设置为：
+```javascript
+const API_BASE_URL = 'http://localhost:3000/api';
+```
+
+## 部署
+
+### 本地开发
+```bash
+npm start
+```
+
+### 生产环境
+可以使用 PM2：
+```bash
+npm install -g pm2
+pm2 start server.js
+```
+
+### 部署到云服务
+
+#### Vercel
+1. 安装 Vercel CLI: `npm i -g vercel`
+2. 运行: `vercel`
+3. 按照提示配置
+
+#### Heroku
+1. 创建 `Procfile`: `web: node server.js`
+2. 部署: `git push heroku main`
+
+## 注意事项
+
+1. **页面解析**：各平台的页面结构可能变化，需要定期更新选择器
+2. **速率限制**：建议添加请求缓存和速率限制
+3. **错误处理**：确保API有完善的错误处理机制
+4. **安全性**：生产环境需要添加认证和限流
+
+## 开发模式
+
+使用 nodemon 自动重启：
+```bash
+npm run dev
+```
+
+## 故障排查
+
+如果API不工作：
+1. 检查端口是否被占用
+2. 检查依赖是否安装完整
+3. 查看控制台错误信息
+4. 测试网络连接
+
