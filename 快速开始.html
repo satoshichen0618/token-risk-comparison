@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -11,14 +12,16 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 40px 20px;
             min-height: 100vh;
             color: #333;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -34,7 +37,7 @@
         .step {
             background: #f8f9fa;
             border-left: 5px solid #667eea;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 25px;
             border-radius: 8px;
         }
@@ -47,20 +50,19 @@
             display: inline-block;
             background: #667eea;
             color: white;
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             text-align: center;
-            line-height: 30px;
+            line-height: 35px;
             margin-right: 10px;
             font-weight: bold;
+            font-size: 1.2rem;
         }
         .step-content {
             line-height: 1.8;
             color: #555;
-        }
-        .step-content strong {
-            color: #667eea;
+            margin-top: 10px;
         }
         .highlight {
             background: #fff3cd;
@@ -77,26 +79,12 @@
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 10px 5px;
             transition: transform 0.2s;
+            font-size: 1.1rem;
         }
         .button:hover {
             transform: translateY(-2px);
-        }
-        .example {
-            background: #e7f3ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: monospace;
-            border-left: 4px solid #2196F3;
-        }
-        ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-        li {
-            margin-bottom: 8px;
         }
         .tip {
             background: #d4edda;
@@ -112,28 +100,34 @@
             margin: 15px 0;
             border-left: 4px solid #dc3545;
         }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .big-button {
+            text-align: center;
+            margin: 30px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🚀 快速开始指南</h1>
         <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1rem;">
-            零基础也能轻松使用！跟着步骤来，5分钟上手
+            自动分析代币风险，一键获取多平台对比结果
         </p>
 
         <div class="step">
             <h2><span class="step-number">1</span>打开工具</h2>
             <div class="step-content">
-                <p><strong>方法一（最简单）：</strong></p>
-                <ul>
-                    <li>找到文件夹中的 <strong>index.html</strong> 文件</li>
-                    <li>双击这个文件</li>
-                    <li>会自动用浏览器打开（就像打开网页一样）</li>
-                </ul>
-                
+                <p>打开 <code>index.html</code> 文件，工具会在浏览器中自动打开。</p>
                 <div class="tip">
-                    <strong>💡 如果双击没反应：</strong><br>
-                    右键点击 index.html → 选择"打开方式" → 选择"Google Chrome"或"Safari"或"Microsoft Edge"
+                    <strong>💡 提示：</strong>如果双击没反应，右键点击文件 → 选择"打开方式" → 选择浏览器
                 </div>
             </div>
         </div>
@@ -141,119 +135,90 @@
         <div class="step">
             <h2><span class="step-number">2</span>输入代币信息</h2>
             <div class="step-content">
-                <p>打开后你会看到两个输入框：</p>
-                <ul>
-                    <li><strong>合约地址：</strong>粘贴你要查询的代币地址</li>
-                    <li><strong>链：</strong>从下拉菜单选择对应的区块链</li>
+                <p>在工具页面中：</p>
+                <ul style="margin-left: 25px; margin-top: 10px;">
+                    <li>在"合约地址"输入框中，粘贴代币地址</li>
+                    <li>在"链"下拉菜单中选择对应的区块链</li>
                 </ul>
                 
-                <div class="example">
+                <div class="code" style="text-align: center; font-size: 1rem;">
                     <strong>示例：</strong><br>
-                    合约地址：0x1234567890abcdef1234567890abcdef12345678<br>
+                    合约地址：0x23894dc9da6c94ecb439911caf7d337746575a72<br>
                     链：Ethereum (ETH)
                 </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">3</span>开始分析</h2>
+            <div class="step-content">
+                <p>点击 <strong>"开始分析"</strong> 按钮</p>
+                <p>工具会自动：</p>
+                <ul style="margin-left: 25px; margin-top: 10px;">
+                    <li>访问GMGN、Ave.ai、CoinMarketCap、Coinbase Onchain四个平台</li>
+                    <li>抓取各平台的风险数据</li>
+                    <li>自动计算综合风险评估</li>
+                    <li>显示详细的风险对比结果</li>
+                </ul>
                 
                 <div class="highlight">
-                    <strong>⚠️ 重要：</strong>确保地址格式正确，EVM链地址以 0x 开头，共42个字符
+                    <strong>⏱️ 分析时间：</strong>通常需要10-30秒，取决于网络速度和平台响应
                 </div>
             </div>
         </div>
 
         <div class="step">
-            <h2><span class="step-number">3</span>生成链接</h2>
+            <h2><span class="step-number">4</span>查看结果</h2>
             <div class="step-content">
-                <p>输入完信息后，点击 <strong>"生成链接"</strong> 按钮</p>
-                <p>页面会显示4个平台的链接卡片：</p>
-                <ul>
-                    <li>🔗 GMGN</li>
-                    <li>🔗 Ave.ai</li>
-                    <li>🔗 CoinMarketCap</li>
-                    <li>🔗 Coinbase Onchain</li>
+                <p>分析完成后，页面会显示：</p>
+                <ul style="margin-left: 25px; margin-top: 10px;">
+                    <li><strong>风险汇总：</strong>综合风险等级和可信度</li>
+                    <li><strong>平台对比结果：</strong>各平台的详细风险数据</li>
                 </ul>
                 
-                <div class="tip">
-                    <strong>💡 提示：</strong>点击卡片会在新标签页打开，不会关闭当前页面，方便来回切换
-                </div>
-            </div>
-        </div>
-
-        <div class="step">
-            <h2><span class="step-number">4</span>访问平台查看信息</h2>
-            <div class="step-content">
-                <p>依次点击各平台的链接，在新页面查看风险信息</p>
-                <p><strong>需要关注的信息：</strong></p>
-                <ul>
-                    <li>风险评分（Risk Score）</li>
-                    <li>是否标记为诈骗（Scam）</li>
-                    <li>是否通过审计（Audited）</li>
-                    <li>风险等级（Risk Level）</li>
-                    <li>其他风险提示</li>
-                </ul>
-                
-                <div class="warning">
-                    <strong>⚠️ 注意：</strong>不同平台的页面布局不同，需要仔细查找风险信息
-                </div>
-            </div>
-        </div>
-
-        <div class="step">
-            <h2><span class="step-number">5</span>填写信息到工具</h2>
-            <div class="step-content">
-                <p>回到工具页面，将看到的信息填写到对应的输入框中</p>
-                
-                <div class="example">
-                    <strong>示例（GMGN平台）：</strong><br>
-                    如果看到 Risk Score: 85，就在"Risk Score"输入框填写：85<br>
-                    如果看到 Honeypot: Yes，就在"是否 Honeypot"输入框填写：Yes
-                </div>
-                
-                <div class="tip">
-                    <strong>💡 提示：</strong>
-                    <ul>
-                        <li>不需要填写所有信息，填写你看到的即可</li>
-                        <li>填写完一个输入框，点击其他地方，系统会自动计算</li>
-                        <li>也可以点击"计算汇总"按钮手动计算</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="step">
-            <h2><span class="step-number">6</span>查看汇总结果</h2>
-            <div class="step-content">
-                <p>填写信息后，页面顶部的 <strong>"风险汇总"</strong> 区域会显示：</p>
-                <ul>
+                <p style="margin-top: 15px;"><strong>风险等级说明：</strong></p>
+                <ul style="margin-left: 25px;">
                     <li>⚠️ <strong>High Confidence Risk</strong> - 高风险，建议采取行动</li>
                     <li>⚡ <strong>Medium Confidence Risk</strong> - 中等风险，需要进一步审核</li>
                     <li>✓ <strong>Potential False Positive</strong> - 可能是误报，建议重新评估</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ 重要提示：需要后端API支持</h3>
+            <p>由于浏览器安全限制，工具需要后端API代理来抓取平台数据。</p>
+            <p><strong>如果看到"需要后端支持"的提示：</strong></p>
+            <ol style="margin-left: 25px;">
+                <li>查看 <code>后端配置说明.md</code> 文件</li>
+                <li>按照说明配置后端API服务器</li>
+                <li>更新前端配置中的API地址</li>
+            </ol>
+            <p style="margin-top: 10px;">或者联系技术支持获取已配置的后端服务地址。</p>
+        </div>
+
+        <div class="step">
+            <h2>❓ 常见问题</h2>
+            <div class="step-content">
+                <p><strong>Q: 点击"开始分析"没有反应？</strong></p>
+                <p>A: 检查浏览器控制台（F12）是否有错误，确认后端API是否正常运行。</p>
                 
-                <p>还会显示 <strong>可信度百分比</strong>，帮助你判断风险等级</p>
+                <p><strong>Q: 显示"需要后端支持"？</strong></p>
+                <p>A: 需要配置后端API代理，查看"后端配置说明.md"了解详细步骤。</p>
+                
+                <p><strong>Q: 分析时间很长？</strong></p>
+                <p>A: 正常，需要访问多个平台，通常需要10-30秒。如果超过1分钟，检查网络连接。</p>
+                
+                <p><strong>Q: 某些平台显示"查询失败"？</strong></p>
+                <p>A: 可能是平台API限制或网络问题，其他平台的数据仍可正常显示。</p>
+                
+                <p><strong>Q: 可以分析哪些链？</strong></p>
+                <p>A: 支持 Ethereum、BSC、Solana、Base、XLayer、Arbitrum、Optimism、Polygon。</p>
             </div>
         </div>
 
         <div style="text-align: center; margin-top: 40px;">
             <a href="index.html" class="button">🚀 开始使用工具</a>
-        </div>
-
-        <div class="step" style="margin-top: 40px;">
-            <h2>❓ 常见问题</h2>
-            <div class="step-content">
-                <p><strong>Q: 打不开文件？</strong></p>
-                <p>A: 右键点击 index.html → 打开方式 → 选择浏览器</p>
-                
-                <p><strong>Q: 链接打不开？</strong></p>
-                <p>A: 检查网络连接，或手动访问平台搜索地址</p>
-                
-                <p><strong>Q: 不知道填什么？</strong></p>
-                <p>A: 访问平台后，页面上显示什么就填什么，看到 Yes 就填 Yes</p>
-                
-                <p><strong>Q: 可以不填所有信息吗？</strong></p>
-                <p>A: 可以！填写部分信息也能计算，但信息越多结果越准确</p>
-                
-                <p><strong>Q: 填错了怎么办？</strong></p>
-                <p>A: 直接修改输入框内容即可，系统会自动重新计算</p>
-            </div>
         </div>
     </div>
 </body>
