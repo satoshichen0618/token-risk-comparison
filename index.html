@@ -229,42 +229,348 @@
         <div id="errorToast" class="toast error" style="display: none;"></div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- 内联JavaScript，避免外部文件加载问题 -->
     <script>
-        // 备用加载和调试
-        window.addEventListener('load', function() {
-            console.log('页面完全加载完成');
-            
-            // 检查关键元素
-            const searchBtn = document.getElementById('searchBtn');
-            const appJsLoaded = typeof generateLinks === 'function';
-            
-            console.log('搜索按钮存在:', !!searchBtn);
-            console.log('app.js已加载:', appJsLoaded);
-            
-            // 如果app.js没加载，显示错误
-            if (!appJsLoaded) {
-                console.error('app.js未正确加载！');
-                const toast = document.getElementById('errorToast');
-                if (toast) {
-                    toast.textContent = 'JavaScript文件加载失败，请检查app.js文件';
-                    toast.style.display = 'block';
-                }
-            }
-            
-            // 备用事件绑定（如果主绑定失败）
-            if (searchBtn && !searchBtn.onclick) {
-                console.log('使用备用事件绑定');
-                searchBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (typeof generateLinks === 'function') {
-                        generateLinks();
-                    } else {
-                        alert('JavaScript未加载，请刷新页面重试');
-                    }
-                });
+// 链到平台链标识的映射
+const chainMapping = {
+    'ETH': { gmgn: 'eth', ave: 'ethereum', cmc: 'ethereum', coinbase: 'ethereum' },
+    'BSC': { gmgn: 'bsc', ave: 'bsc', cmc: 'binance-smart-chain', coinbase: 'bsc' },
+    'SOL': { gmgn: 'sol', ave: 'solana', cmc: 'solana', coinbase: 'solana' },
+    'BASE': { gmgn: 'base', ave: 'base', cmc: 'base', coinbase: 'base' },
+    'XLayer': { gmgn: 'xlayer', ave: 'xlayer', cmc: 'xlayer', coinbase: 'xlayer' },
+    'ARB': { gmgn: 'arb', ave: 'arbitrum', cmc: 'arbitrum', coinbase: 'arbitrum' },
+    'OP': { gmgn: 'op', ave: 'optimism', cmc: 'optimism', coinbase: 'optimism' },
+    'POLYGON': { gmgn: 'polygon', ave: 'polygon', cmc: 'polygon', coinbase: 'polygon' }
+};
+
+// 地址验证和格式化
+function validateAndFormatAddress(address, chain) {
+    if (!address || !address.trim()) {
+        throw new Error('请输入合约地址');
+    }
+    address = address.trim();
+    if (chain !== 'SOL') {
+        if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
+            throw new Error('无效的EVM地址格式');
+        }
+        return address.toLowerCase();
+    } else {
+        if (address.length < 32 || address.length > 44) {
+            throw new Error('无效的Solana地址格式');
+        }
+        return address;
+    }
+}
+
+// 显示错误提示
+function showError(message) {
+    const toast = document.getElementById('errorToast');
+    if (toast) {
+        toast.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 5000);
+    }
+}
+
+// 显示成功提示
+function showSuccess(message) {
+    const toast = document.getElementById('errorToast');
+    if (toast) {
+        toast.textContent = message;
+        toast.className = 'toast success';
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+            toast.className = 'toast error';
+        }, 3000);
+    }
+}
+
+// 生成平台链接
+function generatePlatformLinks(address, chain) {
+    const chainInfo = chainMapping[chain];
+    if (!chainInfo) {
+        throw new Error('不支持的链');
+    }
+    return {
+        gmgn: `https://gmgn.ai/token/${chainInfo.gmgn}/${address}`,
+        ave: `https://ave.ai/token/${chainInfo.ave}/${address}`,
+        cmc: `https://coinmarketcap.com/currencies/${address}/`,
+        coinbase: `https://www.coinbase.com/explorer/chains/${chainInfo.coinbase}/addresses/${address}`
+    };
+}
+
+// 更新平台链接
+function updatePlatformLinks(address, chain) {
+    try {
+        const links = generatePlatformLinks(address, chain);
+        const elements = {
+            gmgnLink: links.gmgn,
+            aveLink: links.ave,
+            cmcLink: links.cmc,
+            coinbaseLink: links.coinbase,
+            quickGmgnLink: links.gmgn,
+            quickAveLink: links.ave,
+            quickCmcLink: links.cmc,
+            quickCoinbaseLink: links.coinbase
+        };
+        for (const [id, href] of Object.entries(elements)) {
+            const el = document.getElementById(id);
+            if (el) el.href = href;
+        }
+    } catch (error) {
+        console.error('生成链接失败:', error);
+        throw error;
+    }
+}
+
+// 生成链接主函数
+function generateLinks() {
+    console.log('generateLinks 被调用');
+    const addressInput = document.getElementById('contractAddress');
+    const chainSelect = document.getElementById('chainSelect');
+    
+    if (!addressInput || !chainSelect) {
+        showError('页面加载不完整，请刷新页面重试');
+        return;
+    }
+    
+    const address = addressInput.value.trim();
+    const chain = chainSelect.value;
+
+    if (!address) {
+        showError('请输入合约地址');
+        return;
+    }
+
+    try {
+        const formattedAddress = validateAndFormatAddress(address, chain);
+        addressInput.value = formattedAddress;
+        updatePlatformLinks(formattedAddress, chain);
+        
+        const linksSection = document.getElementById('linksSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const summarySection = document.getElementById('summarySection');
+        const calculateBtn = document.getElementById('calculateBtn');
+
+        if (linksSection) linksSection.style.display = 'block';
+        if (resultsSection) resultsSection.style.display = 'block';
+        if (summarySection) summarySection.style.display = 'block';
+        if (calculateBtn) calculateBtn.style.display = 'inline-block';
+
+        if (linksSection) {
+            linksSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        showSuccess('链接已生成，请访问各平台查看信息');
+    } catch (error) {
+        console.error('错误:', error);
+        showError(error.message || '生成链接失败');
+    }
+}
+
+// 读取数据函数
+function readGMGNData() {
+    const honeypot = document.getElementById('gmgnHoneypot')?.value.trim() || '';
+    const riskScore = document.getElementById('gmgnRiskScore')?.value.trim() || '';
+    const sellable = document.getElementById('gmgnSellable')?.value.trim() || '';
+    const liquidity = document.getElementById('gmgnLiquidity')?.value.trim() || '';
+    const trading = document.getElementById('gmgnTrading')?.value.trim() || '';
+    if (!honeypot && !riskScore && !sellable && !liquidity && !trading) return null;
+    return { honeypot: honeypot || '-', riskScore: riskScore ? parseInt(riskScore) : null, sellable: sellable || '-', liquidity: liquidity || '-', trading: trading || '-' };
+}
+
+function readAveData() {
+    const riskLevel = document.getElementById('aveRiskLevel')?.value.trim() || '';
+    const scam = document.getElementById('aveScam')?.value.trim() || '';
+    const audited = document.getElementById('aveAudited')?.value.trim() || '';
+    const concentration = document.getElementById('aveConcentration')?.value.trim() || '';
+    if (!riskLevel && !scam && !audited && !concentration) return null;
+    return { riskLevel: riskLevel || '-', scam: scam || '-', audited: audited || '-', concentration: concentration || '-' };
+}
+
+function readCMCData() {
+    const listed = document.getElementById('cmcListed')?.value.trim() || '';
+    const riskTag = document.getElementById('cmcRiskTag')?.value.trim() || '';
+    const liquidity = document.getElementById('cmcLiquidity')?.value.trim() || '';
+    const credibility = document.getElementById('cmcCredibility')?.value.trim() || '';
+    if (!listed && !riskTag && !liquidity && !credibility) return null;
+    return { listed: listed || '-', riskTag: riskTag || '-', liquidity: liquidity || '-', credibility: credibility ? parseInt(credibility) : null };
+}
+
+function readCoinbaseData() {
+    const riskLevel = document.getElementById('coinbaseRiskLevel')?.value.trim() || '';
+    const scam = document.getElementById('coinbaseScam')?.value.trim() || '';
+    const riskTx = document.getElementById('coinbaseRiskTx')?.value.trim() || '';
+    const blacklist = document.getElementById('coinbaseBlacklist')?.value.trim() || '';
+    if (!riskLevel && !scam && !riskTx && !blacklist) return null;
+    return { riskLevel: riskLevel || '-', scam: scam || '-', riskTx: riskTx || '-', blacklist: blacklist || '-' };
+}
+
+// 计算汇总
+function calculateSummary(gmgn, ave, cmc, coinbase) {
+    let riskCount = 0, platformCount = 0, totalConfidence = 0;
+    
+    if (gmgn) {
+        platformCount++;
+        totalConfidence += 25;
+        const riskScore = gmgn.riskScore;
+        const isHoneypot = gmgn.honeypot && (gmgn.honeypot.toLowerCase() === 'yes' || gmgn.honeypot === '是');
+        if ((riskScore !== null && riskScore >= 70) || isHoneypot) riskCount++;
+    }
+    if (ave) {
+        platformCount++;
+        totalConfidence += 25;
+        const riskLevel = ave.riskLevel.toUpperCase();
+        const isScam = ave.scam && (ave.scam.toLowerCase() === 'yes' || ave.scam === '是');
+        if (riskLevel === 'D' || riskLevel === 'C' || isScam) riskCount++;
+    }
+    if (cmc) {
+        platformCount++;
+        totalConfidence += 25;
+        const isListed = cmc.listed && (cmc.listed.toLowerCase() === 'yes' || cmc.listed === '是');
+        const hasRiskTag = cmc.riskTag && (cmc.riskTag.toLowerCase() === 'yes' || cmc.riskTag === '是');
+        if (hasRiskTag || !isListed) riskCount++;
+    }
+    if (coinbase) {
+        platformCount++;
+        totalConfidence += 25;
+        const riskLevel = coinbase.riskLevel ? coinbase.riskLevel.toLowerCase() : '';
+        const isScam = coinbase.scam && (coinbase.scam.toLowerCase() === 'yes' || coinbase.scam === '是');
+        if (riskLevel === 'high' || isScam) riskCount++;
+    }
+
+    if (platformCount === 0) {
+        return { riskLevel: 'low', title: '暂无数据', description: '请先访问各平台并填写信息', confidence: 0 };
+    }
+
+    const riskRatio = riskCount / platformCount;
+    let riskLevel, title, description, confidence;
+
+    if (riskRatio >= 0.75) {
+        riskLevel = 'high';
+        title = 'High Confidence Risk';
+        description = '外部平台一致标记为高风险，建议采取相应措施';
+        confidence = Math.min(95, totalConfidence + 20);
+    } else if (riskRatio >= 0.5) {
+        riskLevel = 'medium';
+        title = 'Medium Confidence Risk';
+        description = '半数以上平台标记风险，需要进一步审核';
+        confidence = Math.min(85, totalConfidence + 10);
+    } else if (riskRatio >= 0.25) {
+        riskLevel = 'medium';
+        title = 'Medium Confidence Risk';
+        description = '部分平台标记风险，建议谨慎处理';
+        confidence = Math.max(50, totalConfidence - 10);
+    } else {
+        riskLevel = 'low';
+        title = 'Potential False Positive';
+        description = '多数平台未标记风险，可能是误报，建议重新评估';
+        confidence = Math.max(40, totalConfidence - 20);
+    }
+
+    return { riskLevel, title, description, confidence: Math.round(confidence) };
+}
+
+function updateSummaryCard(summary) {
+    const badge = document.getElementById('summaryRiskBadge');
+    if (badge) {
+        badge.textContent = summary.riskLevel === 'high' ? '⚠️' : summary.riskLevel === 'medium' ? '⚡' : '✓';
+        badge.className = `risk-badge ${summary.riskLevel}`;
+    }
+    const titleEl = document.getElementById('summaryTitle');
+    const descEl = document.getElementById('summaryDescription');
+    const confValEl = document.getElementById('confidenceValue');
+    const confMeterEl = document.getElementById('confidenceMeter');
+    if (titleEl) titleEl.textContent = summary.title;
+    if (descEl) descEl.textContent = summary.description;
+    if (confValEl) confValEl.textContent = `${summary.confidence}%`;
+    if (confMeterEl) confMeterEl.style.width = `${summary.confidence}%`;
+}
+
+function calculateSummaryFromInputs() {
+    const gmgn = readGMGNData();
+    const ave = readAveData();
+    const cmc = readCMCData();
+    const coinbase = readCoinbaseData();
+
+    if (!gmgn && !ave && !cmc && !coinbase) {
+        showError('请至少填写一个平台的信息');
+        return;
+    }
+
+    const summary = calculateSummary(gmgn, ave, cmc, coinbase);
+    updateSummaryCard(summary);
+    const summarySection = document.getElementById('summarySection');
+    if (summarySection) {
+        summarySection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    showSuccess('汇总计算完成');
+}
+
+// 初始化事件监听
+function initEventListeners() {
+    console.log('初始化事件监听器');
+    const searchBtn = document.getElementById('searchBtn');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const addressInput = document.getElementById('contractAddress');
+
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('按钮被点击');
+            generateLinks();
+        });
+    }
+    
+    if (calculateBtn) {
+        calculateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            calculateSummaryFromInputs();
+        });
+    }
+
+    if (addressInput) {
+        addressInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                generateLinks();
             }
         });
+    }
+    
+    // 输入框自动计算
+    const inputs = document.querySelectorAll('.value-input');
+    inputs.forEach(input => {
+        input.addEventListener('blur', () => {
+            setTimeout(() => {
+                const gmgn = readGMGNData();
+                const ave = readAveData();
+                const cmc = readCMCData();
+                const coinbase = readCoinbaseData();
+                if (gmgn || ave || cmc || coinbase) {
+                    calculateSummaryFromInputs();
+                }
+            }, 500);
+        });
+    });
+    
+    console.log('事件绑定完成');
+}
+
+// 页面加载完成后初始化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEventListeners);
+} else {
+    initEventListeners();
+}
+
+window.addEventListener('load', function() {
+    console.log('页面完全加载完成');
+    initEventListeners();
+});
     </script>
 </body>
 </html>
