@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速开始指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .step-content {
+            line-height: 1.8;
+            color: #555;
+        }
+        .step-content strong {
+            color: #667eea;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .example {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            border-left: 4px solid #2196F3;
+        }
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .tip {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .warning {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 快速开始指南</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1rem;">
+            零基础也能轻松使用！跟着步骤来，5分钟上手
+        </p>
+
+        <div class="step">
+            <h2><span class="step-number">1</span>打开工具</h2>
+            <div class="step-content">
+                <p><strong>方法一（最简单）：</strong></p>
+                <ul>
+                    <li>找到文件夹中的 <strong>index.html</strong> 文件</li>
+                    <li>双击这个文件</li>
+                    <li>会自动用浏览器打开（就像打开网页一样）</li>
+                </ul>
+                
+                <div class="tip">
+                    <strong>💡 如果双击没反应：</strong><br>
+                    右键点击 index.html → 选择"打开方式" → 选择"Google Chrome"或"Safari"或"Microsoft Edge"
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">2</span>输入代币信息</h2>
+            <div class="step-content">
+                <p>打开后你会看到两个输入框：</p>
+                <ul>
+                    <li><strong>合约地址：</strong>粘贴你要查询的代币地址</li>
+                    <li><strong>链：</strong>从下拉菜单选择对应的区块链</li>
+                </ul>
+                
+                <div class="example">
+                    <strong>示例：</strong><br>
+                    合约地址：0x1234567890abcdef1234567890abcdef12345678<br>
+                    链：Ethereum (ETH)
+                </div>
+                
+                <div class="highlight">
+                    <strong>⚠️ 重要：</strong>确保地址格式正确，EVM链地址以 0x 开头，共42个字符
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">3</span>生成链接</h2>
+            <div class="step-content">
+                <p>输入完信息后，点击 <strong>"生成链接"</strong> 按钮</p>
+                <p>页面会显示4个平台的链接卡片：</p>
+                <ul>
+                    <li>🔗 GMGN</li>
+                    <li>🔗 Ave.ai</li>
+                    <li>🔗 CoinMarketCap</li>
+                    <li>🔗 Coinbase Onchain</li>
+                </ul>
+                
+                <div class="tip">
+                    <strong>💡 提示：</strong>点击卡片会在新标签页打开，不会关闭当前页面，方便来回切换
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">4</span>访问平台查看信息</h2>
+            <div class="step-content">
+                <p>依次点击各平台的链接，在新页面查看风险信息</p>
+                <p><strong>需要关注的信息：</strong></p>
+                <ul>
+                    <li>风险评分（Risk Score）</li>
+                    <li>是否标记为诈骗（Scam）</li>
+                    <li>是否通过审计（Audited）</li>
+                    <li>风险等级（Risk Level）</li>
+                    <li>其他风险提示</li>
+                </ul>
+                
+                <div class="warning">
+                    <strong>⚠️ 注意：</strong>不同平台的页面布局不同，需要仔细查找风险信息
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">5</span>填写信息到工具</h2>
+            <div class="step-content">
+                <p>回到工具页面，将看到的信息填写到对应的输入框中</p>
+                
+                <div class="example">
+                    <strong>示例（GMGN平台）：</strong><br>
+                    如果看到 Risk Score: 85，就在"Risk Score"输入框填写：85<br>
+                    如果看到 Honeypot: Yes，就在"是否 Honeypot"输入框填写：Yes
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 提示：</strong>
+                    <ul>
+                        <li>不需要填写所有信息，填写你看到的即可</li>
+                        <li>填写完一个输入框，点击其他地方，系统会自动计算</li>
+                        <li>也可以点击"计算汇总"按钮手动计算</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">6</span>查看汇总结果</h2>
+            <div class="step-content">
+                <p>填写信息后，页面顶部的 <strong>"风险汇总"</strong> 区域会显示：</p>
+                <ul>
+                    <li>⚠️ <strong>High Confidence Risk</strong> - 高风险，建议采取行动</li>
+                    <li>⚡ <strong>Medium Confidence Risk</strong> - 中等风险，需要进一步审核</li>
+                    <li>✓ <strong>Potential False Positive</strong> - 可能是误报，建议重新评估</li>
+                </ul>
+                
+                <p>还会显示 <strong>可信度百分比</strong>，帮助你判断风险等级</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="index.html" class="button">🚀 开始使用工具</a>
+        </div>
+
+        <div class="step" style="margin-top: 40px;">
+            <h2>❓ 常见问题</h2>
+            <div class="step-content">
+                <p><strong>Q: 打不开文件？</strong></p>
+                <p>A: 右键点击 index.html → 打开方式 → 选择浏览器</p>
+                
+                <p><strong>Q: 链接打不开？</strong></p>
+                <p>A: 检查网络连接，或手动访问平台搜索地址</p>
+                
+                <p><strong>Q: 不知道填什么？</strong></p>
+                <p>A: 访问平台后，页面上显示什么就填什么，看到 Yes 就填 Yes</p>
+                
+                <p><strong>Q: 可以不填所有信息吗？</strong></p>
+                <p>A: 可以！填写部分信息也能计算，但信息越多结果越准确</p>
+                
+                <p><strong>Q: 填错了怎么办？</strong></p>
+                <p>A: 直接修改输入框内容即可，系统会自动重新计算</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

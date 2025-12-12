@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多平台风险对比工具 - Token Risk Comparison</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 外部多平台风险对比工具</h1>
+            <p class="subtitle">对比主流链上安全平台的风险标签与评分</p>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                <a href="快速开始.html" target="_blank" style="display: inline-block; padding: 10px 20px; background: rgba(99, 102, 241, 0.2); border: 1px solid var(--primary-color); border-radius: 8px; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease;">
+                    📖 使用教程
+                </a>
+                <a href="一键部署-Netlify.html" target="_blank" style="display: inline-block; padding: 10px 20px; background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); border-radius: 8px; color: var(--success-color); text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease;">
+                    🚀 部署到互联网
+                </a>
+            </div>
+        </header>
+
+        <!-- 输入区 -->
+        <section class="input-section">
+            <div class="input-group">
+                <label for="contractAddress">合约地址</label>
+                <input 
+                    type="text" 
+                    id="contractAddress" 
+                    placeholder="0x..." 
+                    autocomplete="off"
+                >
+            </div>
+            <div class="input-group">
+                <label for="chainSelect">链</label>
+                <select id="chainSelect">
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="BSC">Binance Smart Chain (BSC)</option>
+                    <option value="SOL">Solana (SOL)</option>
+                    <option value="BASE">Base</option>
+                    <option value="XLayer">XLayer</option>
+                    <option value="ARB">Arbitrum</option>
+                    <option value="OP">Optimism</option>
+                    <option value="POLYGON">Polygon</option>
+                </select>
+            </div>
+            <button id="searchBtn" class="search-btn">
+                <span class="btn-text">生成链接</span>
+            </button>
+            <button id="calculateBtn" class="search-btn secondary-btn" style="display: none;">
+                <span class="btn-text">计算汇总</span>
+            </button>
+        </section>
+
+        <!-- 汇总风险摘要 -->
+        <section id="summarySection" class="summary-section" style="display: none;">
+            <h2>风险汇总</h2>
+            <div class="summary-card">
+                <div class="summary-header">
+                    <span class="risk-badge" id="summaryRiskBadge">-</span>
+                    <div class="summary-info">
+                        <h3 id="summaryTitle">综合风险评估</h3>
+                        <p id="summaryDescription">正在分析...</p>
+                    </div>
+                </div>
+                <div class="confidence-meter">
+                    <label>可信度</label>
+                    <div class="meter-bar">
+                        <div class="meter-fill" id="confidenceMeter"></div>
+                    </div>
+                    <span class="confidence-value" id="confidenceValue">-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 平台链接区 -->
+        <section id="linksSection" class="links-section" style="display: none;">
+            <h2>平台访问链接</h2>
+            <p class="section-hint">点击下方链接访问各平台查看风险信息，然后手动填写到下方表单中</p>
+            <div class="links-grid">
+                <a id="quickGmgnLink" href="#" target="_blank" class="quick-link-card">
+                    <h3>GMGN</h3>
+                    <p>查看风险评分和Honeypot检测</p>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a id="quickAveLink" href="#" target="_blank" class="quick-link-card">
+                    <h3>Ave.ai</h3>
+                    <p>查看风险等级和审计状态</p>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a id="quickCmcLink" href="#" target="_blank" class="quick-link-card">
+                    <h3>CoinMarketCap</h3>
+                    <p>查看是否收录和风险标签</p>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a id="quickCoinbaseLink" href="#" target="_blank" class="quick-link-card">
+                    <h3>Coinbase Onchain</h3>
+                    <p>查看合规标签和风险标记</p>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 平台结果卡片 -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+            <h2>手动输入对比结果</h2>
+            <p class="section-hint">访问各平台后，将看到的信息填写到下方表单中</p>
+            <div class="platforms-grid">
+                <!-- GMGN 卡片 -->
+                <div class="platform-card" id="gmgnCard">
+                    <div class="platform-header">
+                        <h3>GMGN</h3>
+                        <a id="gmgnLink" href="#" target="_blank" class="platform-link-btn">
+                            🔗 访问平台
+                        </a>
+                    </div>
+                    <div class="platform-content">
+                        <div class="info-row">
+                            <span class="label">是否 Honeypot:</span>
+                            <input type="text" class="value-input" id="gmgnHoneypot" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Risk Score:</span>
+                            <input type="text" class="value-input" id="gmgnRiskScore" placeholder="0-100">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">是否允许卖出:</span>
+                            <input type="text" class="value-input" id="gmgnSellable" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Liquidity 状态:</span>
+                            <input type="text" class="value-input" id="gmgnLiquidity" placeholder="High/Medium/Low">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">最近交易情况:</span>
+                            <input type="text" class="value-input" id="gmgnTrading" placeholder="正常/异常">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ave.ai 卡片 -->
+                <div class="platform-card" id="aveCard">
+                    <div class="platform-header">
+                        <h3>Ave.ai</h3>
+                        <a id="aveLink" href="#" target="_blank" class="platform-link-btn">
+                            🔗 访问平台
+                        </a>
+                    </div>
+                    <div class="platform-content">
+                        <div class="info-row">
+                            <span class="label">风险等级:</span>
+                            <input type="text" class="value-input" id="aveRiskLevel" placeholder="A/B/C/D">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">是否标记诈骗:</span>
+                            <input type="text" class="value-input" id="aveScam" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">是否审计:</span>
+                            <input type="text" class="value-input" id="aveAudited" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">大户/持仓集中度:</span>
+                            <input type="text" class="value-input" id="aveConcentration" placeholder="高/中/低">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CoinMarketCap 卡片 -->
+                <div class="platform-card" id="cmcCard">
+                    <div class="platform-header">
+                        <h3>CoinMarketCap</h3>
+                        <a id="cmcLink" href="#" target="_blank" class="platform-link-btn">
+                            🔗 访问平台
+                        </a>
+                    </div>
+                    <div class="platform-content">
+                        <div class="info-row">
+                            <span class="label">是否收录:</span>
+                            <input type="text" class="value-input" id="cmcListed" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">是否显示风险标签:</span>
+                            <input type="text" class="value-input" id="cmcRiskTag" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">流动性来源:</span>
+                            <input type="text" class="value-input" id="cmcLiquidity" placeholder="DEX/CEX">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">市值可信度评分:</span>
+                            <input type="text" class="value-input" id="cmcCredibility" placeholder="0-100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coinbase Onchain 卡片 -->
+                <div class="platform-card" id="coinbaseCard">
+                    <div class="platform-header">
+                        <h3>Coinbase Onchain</h3>
+                        <a id="coinbaseLink" href="#" target="_blank" class="platform-link-btn">
+                            🔗 访问平台
+                        </a>
+                    </div>
+                    <div class="platform-content">
+                        <div class="info-row">
+                            <span class="label">资产风险等级:</span>
+                            <input type="text" class="value-input" id="coinbaseRiskLevel" placeholder="Low/Medium/High">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">是否涉及诈骗地址:</span>
+                            <input type="text" class="value-input" id="coinbaseScam" placeholder="Yes/No">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">历史风险交易占比:</span>
+                            <input type="text" class="value-input" id="coinbaseRiskTx" placeholder="0-100%">
+                        </div>
+                        <div class="info-row">
+                            <span class="label">合规黑名单比对:</span>
+                            <input type="text" class="value-input" id="coinbaseBlacklist" placeholder="匹配/无匹配">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 错误提示 -->
+        <div id="errorToast" class="toast error" style="display: none;"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
