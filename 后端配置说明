@@ -1,0 +1,227 @@
+# 后端API代理配置说明
+
+## 为什么需要后端？
+
+由于浏览器的CORS（跨域资源共享）安全限制，前端无法直接访问其他网站的数据。因此需要后端API代理来抓取各平台的数据。
+
+## 快速开始（使用Node.js）
+
+### 1. 安装依赖
+
+```bash
+npm init -y
+npm install express cors axios cheerio
+```
+
+### 2. 创建 server.js
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// GMGN API
+app.get('/api/gmgn', async (req, res) => {
+    try {
+        const { address, chain } = req.query;
+        const chainMap = {
+            'ETH': 'eth', 'BSC': 'bsc', 'SOL': 'sol',
+            'BASE': 'base', 'XLayer': 'xlayer', 'ARB': 'arb',
+            'OP': 'op', 'POLYGON': 'polygon'
+        };
+        const chainId = chainMap[chain] || 'eth';
+        
+        // 这里需要根据GMGN的实际API调整
+        const url = `https://gmgn.ai/token/${chainId}/${address}`;
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        
+        // 解析页面数据（需要根据实际页面结构调整）
+        const riskScore = parseInt($('.risk-score').text()) || 0;
+        const isHoneypot = $('.honeypot-status').text().toLowerCase().includes('yes');
+        
+        res.json({
+            honeypot: isHoneypot ? 'Yes' : 'No',
+            riskScore: riskScore,
+            sellable: 'Yes', // 需要实际解析
+            liquidity: 'High', // 需要实际解析
+            trading: '正常' // 需要实际解析
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Ave.ai API
+app.get('/api/ave', async (req, res) => {
+    try {
+        const { address, chain } = req.query;
+        // 类似实现...
+        res.json({
+            riskLevel: 'B',
+            scam: 'No',
+            audited: 'Yes',
+            concentration: '中'
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// CMC API
+app.get('/api/cmc', async (req, res) => {
+    try {
+        const { address, chain } = req.query;
+        // 类似实现...
+        res.json({
+            listed: 'Yes',
+            riskTag: 'No',
+            liquidity: 'DEX + CEX',
+            credibility: 85
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Coinbase API
+app.get('/api/coinbase', async (req, res) => {
+    try {
+        const { address, chain } = req.query;
+        // 类似实现...
+        res.json({
+            riskLevel: 'Low',
+            scam: 'No',
+            riskTx: '2%',
+            blacklist: '无匹配'
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`服务器运行在 http://localhost:${PORT}`);
+});
+```
+
+### 3. 运行服务器
+
+```bash
+node server.js
+```
+
+### 4. 更新前端配置
+
+在 `index.html` 中，将 `API_BASE_URL` 改为：
+```javascript
+const API_BASE_URL = 'http://localhost:3000/api';
+```
+
+## 使用Python（Flask）
+
+### 1. 安装依赖
+
+```bash
+pip install flask flask-cors requests beautifulsoup4
+```
+
+### 2. 创建 app.py
+
+```python
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import requests
+from bs4 import BeautifulSoup
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/api/gmgn')
+def get_gmgn():
+    address = request.args.get('address')
+    chain = request.args.get('chain')
+    # 实现数据抓取逻辑
+    return jsonify({
+        'honeypot': 'No',
+        'riskScore': 45,
+        'sellable': 'Yes',
+        'liquidity': 'High',
+        'trading': '正常'
+    })
+
+# 类似实现其他API端点...
+
+if __name__ == '__main__':
+    app.run(port=3000)
+```
+
+## 部署到云服务
+
+### Vercel（推荐）
+
+1. 创建 `vercel.json`:
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    }
+  ]
+}
+```
+
+2. 部署：
+```bash
+npm install -g vercel
+vercel
+```
+
+### Heroku
+
+1. 创建 `Procfile`:
+```
+web: node server.js
+```
+
+2. 部署：
+```bash
+heroku create
+git push heroku main
+```
+
+## 注意事项
+
+1. **API限制**：各平台可能有速率限制，建议添加缓存
+2. **页面结构变化**：如果平台更新页面，需要调整解析逻辑
+3. **错误处理**：确保API有完善的错误处理
+4. **安全性**：生产环境需要添加认证和限流
+
+## 简化方案
+
+如果暂时无法实现后端，可以：
+1. 使用公开的API服务（如果有）
+2. 使用浏览器扩展（绕过CORS）
+3. 使用第三方代理服务
+
+## 需要帮助？
+
+如果遇到问题，请检查：
+- 后端服务器是否正常运行
+- API端点是否正确
+- 网络连接是否正常
+- 浏览器控制台的错误信息
