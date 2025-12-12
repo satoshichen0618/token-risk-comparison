@@ -365,9 +365,9 @@ function calculateSummaryFromInputs() {
     showSuccess('汇总计算完成');
 }
 
-// 事件监听
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('页面加载完成，初始化事件监听');
+// 事件监听函数
+function initEventListeners() {
+    console.log('初始化事件监听器');
     
     const searchBtn = document.getElementById('searchBtn');
     const calculateBtn = document.getElementById('calculateBtn');
@@ -375,36 +375,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!searchBtn) {
         console.error('找不到搜索按钮');
-        showError('页面加载错误，请刷新重试');
+        setTimeout(() => {
+            const btn = document.getElementById('searchBtn');
+            if (btn) {
+                console.log('延迟找到按钮，重新绑定');
+                initEventListeners();
+            } else {
+                showError('页面加载错误，请刷新重试');
+            }
+        }, 500);
         return;
     }
 
-    console.log('绑定按钮事件');
-    searchBtn.addEventListener('click', (e) => {
+    console.log('找到搜索按钮，绑定事件');
+    
+    // 移除旧的事件监听器（如果有）
+    const newSearchBtn = searchBtn.cloneNode(true);
+    searchBtn.parentNode.replaceChild(newSearchBtn, searchBtn);
+    
+    // 重新绑定事件
+    newSearchBtn.addEventListener('click', function(e) {
         console.log('按钮被点击');
         e.preventDefault();
-        generateLinks();
+        e.stopPropagation();
+        try {
+            generateLinks();
+        } catch (error) {
+            console.error('生成链接时出错:', error);
+            showError('发生错误: ' + error.message);
+        }
     });
     
     if (calculateBtn) {
-        calculateBtn.addEventListener('click', (e) => {
+        calculateBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            calculateSummaryFromInputs();
+            e.stopPropagation();
+            try {
+                calculateSummaryFromInputs();
+            } catch (error) {
+                console.error('计算汇总时出错:', error);
+                showError('计算时发生错误: ' + error.message);
+            }
         });
     }
 
     // 支持回车键生成链接
     if (addressInput) {
-        addressInput.addEventListener('keypress', (e) => {
+        addressInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 console.log('按了回车键');
                 e.preventDefault();
-                generateLinks();
+                try {
+                    generateLinks();
+                } catch (error) {
+                    console.error('回车键触发错误:', error);
+                }
             }
         });
     }
     
     console.log('事件绑定完成');
+}
+
+// DOM加载完成后初始化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEventListeners);
+} else {
+    // DOM已经加载完成
+    initEventListeners();
+}
+
+// 备用：窗口加载完成后再次尝试
+window.addEventListener('load', function() {
+    console.log('窗口加载完成');
+    // 确保事件已绑定
+    const searchBtn = document.getElementById('searchBtn');
+    if (searchBtn && !searchBtn.hasAttribute('data-bound')) {
+        console.log('窗口加载后重新绑定事件');
+        searchBtn.setAttribute('data-bound', 'true');
+        initEventListeners();
+    }
 });
 
     // 输入框变化时自动计算（可选，也可以手动点击按钮）
